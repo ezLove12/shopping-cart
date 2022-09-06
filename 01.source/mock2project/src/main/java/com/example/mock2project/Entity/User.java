@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @NotBlank
-    private Integer status;
+    private boolean status;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
