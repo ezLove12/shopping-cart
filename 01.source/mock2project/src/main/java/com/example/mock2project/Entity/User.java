@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @NotBlank
-    private Integer status;
+    private boolean status;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -46,11 +46,13 @@ public class User {
     )
     public Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<SignInToken> tokens;
     public User() {
 
     }
 
-    public User(String username, String email, String password, Integer status) {
+    public User(String username, String email, String password, boolean status) {
         this.username = username;
         this.email = email;
         this.password = password;
