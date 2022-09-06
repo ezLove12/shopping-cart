@@ -36,6 +36,7 @@ public class User {
     private String password;
 
     @NotBlank
+    @Column(columnDefinition = "boolean default false")
     private boolean status;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,8 +47,6 @@ public class User {
     )
     public Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<SignInToken> tokens;
     public User() {
 
     }
@@ -59,5 +58,16 @@ public class User {
         this.status = status;
     }
 
+    public User(String username, String email, String password, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

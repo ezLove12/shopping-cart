@@ -1,5 +1,6 @@
 package com.example.mock2project.service;
 
+import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
 import com.example.mock2project.repository.UserRepository;
@@ -11,10 +12,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class UserDetailImpl implements UserDetailsService {
+public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -38,7 +41,7 @@ public class UserDetailImpl implements UserDetailsService {
         return userDetails;
     }
 
-    public String SignUpUser(User user){
+    public String signUpUser(User user){
         User userExist = userRepository.findByEmail(user.getEmail());
 
         if(user!=null){
@@ -52,6 +55,9 @@ public class UserDetailImpl implements UserDetailsService {
             throw new IllegalStateException(String.format("User with email %s already exists!", user.getEmail()));
         }
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role("Customer"));
+        user.setRoles(roles);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
 
@@ -64,5 +70,9 @@ public class UserDetailImpl implements UserDetailsService {
         SignInToken confirmationToken = new SignInToken(token, LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15), user);
         tokenService.saveToken(confirmationToken);
+    }
+
+    public int enableUser(String email){
+        return userRepository.updateStatus(email);
     }
 }
