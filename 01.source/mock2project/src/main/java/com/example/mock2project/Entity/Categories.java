@@ -1,0 +1,23 @@
+package com.example.mock2project.Entity;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.util.List;
+
+@Entity
+public class Categories {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "cate_name")
+    @Size(max = 20)
+    private String name;
+
+    @Column(name = "cate_img")
+    private String image_category;
+
+    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    private List<Product> productList;
+}
