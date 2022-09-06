@@ -1,10 +1,17 @@
 package com.example.mock2project.Entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
+@Getter
+@Setter
 public class Product {
 
     @Id
@@ -38,6 +45,15 @@ public class Product {
     private int status;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "categories_id")
     private Categories categories;
+
+    @OneToMany(mappedBy = "product")
+    private List<Rating> ratingList;
+
+    @OneToMany(mappedBy = "product")
+    private List<SizeType> sizeTypes;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetails> orderDetails;
 }

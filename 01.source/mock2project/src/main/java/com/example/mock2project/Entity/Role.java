@@ -1,10 +1,15 @@
 package com.example.mock2project.Entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Role")
+@Getter
+@Setter
 public class Role {
 
     @Id

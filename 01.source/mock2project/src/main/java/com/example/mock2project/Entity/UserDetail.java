@@ -1,5 +1,8 @@
 package com.example.mock2project.Entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -7,6 +10,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "User_detail")
+@Getter
+@Setter
 public class UserDetail {
 
     @Id
@@ -27,7 +32,8 @@ public class UserDetail {
     @Column(name = "gender")
     private Integer gender;
 
-    @OneToOne(mappedBy = "userDetail")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
 }
