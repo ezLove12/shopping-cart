@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
     public String signUpUser(User user){
         User userExist = userRepository.findByEmail(user.getEmail());
 
-        if(user!=null){
+        if(userExist!=null){
             boolean isActive = userRepository.findByEmail(user.getEmail()).isStatus();
             if(!isActive){
                 String token = UUID.randomUUID().toString();
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("Customer"));
+        roles.add(new Role("USER"));
         user.setRoles(roles);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
@@ -74,5 +74,9 @@ public class UserService implements UserDetailsService {
 
     public int enableUser(String email){
         return userRepository.updateStatus(email);
+    }
+
+    public int changeRole(Long id){
+        return userRepository.updateRole(id);
     }
 }

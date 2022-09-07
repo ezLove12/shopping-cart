@@ -1,5 +1,6 @@
 package com.example.mock2project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,19 +35,20 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(max = 50)
+
     private String password;
 
-    @NotBlank
+
     @Column(columnDefinition = "boolean default false")
     private boolean status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonBackReference
     public Set<Role> roles = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")

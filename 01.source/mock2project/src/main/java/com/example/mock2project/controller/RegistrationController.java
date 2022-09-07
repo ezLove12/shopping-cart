@@ -10,12 +10,12 @@ public class RegistrationController {
     @Autowired
     RegistrationService service;
 
-    @PostMapping("/signup")
+    @PostMapping( "/signup")
     public String register(@RequestBody User user){
         return service.register(user);
     }
 
-    @GetMapping("confirm")
+    @GetMapping("/confirm")
     public String confirm(@RequestParam(name = "token") String token){
         return service.confirmToken(token);
     }

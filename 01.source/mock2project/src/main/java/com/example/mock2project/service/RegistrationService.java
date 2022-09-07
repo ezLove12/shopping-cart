@@ -28,7 +28,7 @@ public class RegistrationService {
         boolean isValid = emailValidator.test(user.getEmail());
         if(isValid){
             String token = userService.signUpUser(user);
-            String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
+            String link = "http://localhost:8080/confirm?token=" + token;
             emailSender.sendEmail(user.getEmail(), buildEmail(user.getUsername(), link));
             return token;
         }else{
@@ -54,7 +54,7 @@ public class RegistrationService {
 
         tokenService.setConfirmedAt(token);
         userService.enableUser(confirmToken.get().getAppUser().getEmail());
-
+        userService.changeRole(confirmToken.get().getAppUser().getId());
         return "Your email is confirmed. Thank you for using our service!";
     }
 
