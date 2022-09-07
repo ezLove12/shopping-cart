@@ -16,4 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("update  User u set u.status = true where u.email=?1")
     int updateStatus(String email);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "update user_role set role_id=1 where user_id=?1")
+    int updateRole(Long id);
 }
