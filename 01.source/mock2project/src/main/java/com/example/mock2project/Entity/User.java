@@ -3,10 +3,12 @@ package com.example.mock2project.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.example.mock2project.Entity.UserDetail;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,6 +47,15 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     public Set<Role> roles = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private UserDetail userDetail;
+
+    @OneToMany(mappedBy = "user")
+    private List<Rating> ratingList;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
     public User() {
 

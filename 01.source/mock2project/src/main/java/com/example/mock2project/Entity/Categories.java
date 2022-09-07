@@ -5,26 +5,24 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
-@Table(name = "Role")
 @Getter
 @Setter
-public class Role {
+public class Categories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "role_name")
+    @Column(name = "cate_name")
     @Size(max = 20)
     private String name;
 
-    public Role() {
+    @Column(name = "cate_img")
+    private String image_category;
 
-    }
-
-    public Role(String name) {
-        this.name = name;
-    }
+    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    private List<Product> productList;
 }
