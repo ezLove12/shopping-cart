@@ -1,18 +1,17 @@
 package com.example.mock2project.security;
 
+import com.example.mock2project.filter.CustomAuthenticationFilter;
 import com.example.mock2project.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -20,26 +19,24 @@ public class WebSecurityConfig{
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
-
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
                 .authorizeRequests()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/confirm").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .antMatchers("/signup","/token/refresh/**", "/confirm").permitAll()
+                .anyRequest().authenticated();
+        http
+                .addFilter(new CustomAuthenticationFilter(authenticationManager()));
 
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
     }
-
 }

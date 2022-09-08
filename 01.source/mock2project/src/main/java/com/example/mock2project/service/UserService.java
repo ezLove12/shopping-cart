@@ -79,4 +79,8 @@ public class UserService implements UserDetailsService {
     public int changeRole(Long id){
         return userRepository.updateRole(id);
     }
+
+    public User getUser(String email){
+        return userRepository.findByEmail(email);
+    }
 }
