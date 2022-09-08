@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.User;
+import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ public class JWTService {
         this.userService = userService;
     }
 
-    public Map<String, String> getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Map<String, String> getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
             try{
@@ -46,7 +47,7 @@ public class JWTService {
                 tokens.put("refresh token", refreshToken);
                 return tokens;
 
-            }catch (Exception e){
+            }catch (JwtException e){
                 response.setHeader("error", e.getMessage());
                 response.setStatus(403);
                 Map<String, String> error = new HashMap<>();

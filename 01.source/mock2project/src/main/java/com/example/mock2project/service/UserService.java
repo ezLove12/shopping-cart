@@ -7,12 +7,15 @@ import com.example.mock2project.repository.UserRepository;
 import com.example.mock2project.security.PasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -94,6 +97,7 @@ public class UserService implements UserDetailsService {
         log.info(old_password);
         if (passwordEncoder.bCryptPasswordEncoder().matches(old_password,encodedPassword)){
             userRepository.changePassword(passwordEncoder.bCryptPasswordEncoder().encode(new_password), user_id);
+
         }else{
             throw new Exception("Password must matches old password");
         }

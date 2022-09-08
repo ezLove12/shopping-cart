@@ -40,7 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/signup","/token/refresh/**", "/confirm").permitAll();
         http
                 .authorizeRequests()
-                .antMatchers("/user/profile/**").hasAuthority("ROLE_ACTIVE_USER");
+                .antMatchers("/user/profile/**").hasAnyAuthority("ROLE_ACTIVE_USER",
+                        "ROLE_SYSTEM_ADMIN", "ROLE_SALE_ADMIN");
         http
                 .addFilter(new CustomAuthenticationFilter(authenticationManager()));
         http
