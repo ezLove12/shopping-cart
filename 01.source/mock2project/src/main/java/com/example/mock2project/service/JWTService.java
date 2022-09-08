@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,6 @@ public class JWTService {
                 String accessToken = JWT.create()
                         .withSubject(user.getUsername())
                         .withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000)) //10m
-                        .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
@@ -58,6 +56,25 @@ public class JWTService {
 
         }else{
             throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
+    public String getUserIdFromToken(HttpServletRequest request, HttpServletResponse response){
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
+            try {
+                String refreshToken = authorizationHeader.substring("Bearer ".length()); //get token after bearer
+                Algorithm algorithm = Algorithm.HMAC256("viet".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refreshToken);
+                String username = decodedJWT.getSubject();
+                User user = userService.getUser(username);
+                return String.valueOf(user.getId());
+            }catch (Exception e ){
+                return e.getMessage();
+            }
+        }else{
+            throw new RuntimeException("Your don't have permission to do that");
         }
     }
 }
