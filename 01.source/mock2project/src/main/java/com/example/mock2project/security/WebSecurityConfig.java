@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .addFilter(new CustomAuthenticationFilter(authenticationManager()));
         http
                 .addFilterBefore(new CustomAuthorizationFilter() , UsernamePasswordAuthenticationFilter.class);
+        http.logout();
 
     }
 }

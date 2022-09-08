@@ -23,7 +23,15 @@ public class UserController {
     JWTService jwtService;
 
     @PostMapping("/changepassword")
-    public String changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return "hello";
+    public void changePassword(HttpServletRequest request, HttpServletResponse response, @RequestParam Long id) throws Exception {
+        Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
+        if(userTokenId == id){
+            String new_password = request.getParameter("new_password");
+            String ole_password = request.getParameter("old_password");
+            userService.changePassword(new_password,id, ole_password);
+        }else{
+            throw new Exception("You don't have permission");
+        }
     }
 }
+

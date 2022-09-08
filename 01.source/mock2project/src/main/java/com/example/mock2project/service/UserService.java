@@ -90,7 +90,9 @@ public class UserService implements UserDetailsService {
 
     public void changePassword(String new_password, Long user_id, String old_password) throws Exception {
         String encodedPassword = userRepository.getEncodedPassword(user_id);
-        if (passwordEncoder.bCryptPasswordEncoder().matches(old_password, encodedPassword)){
+        log.info(encodedPassword);
+        log.info(old_password);
+        if (passwordEncoder.bCryptPasswordEncoder().matches(old_password,encodedPassword)){
             userRepository.changePassword(passwordEncoder.bCryptPasswordEncoder().encode(new_password), user_id);
         }else{
             throw new Exception("Password must matches old password");
