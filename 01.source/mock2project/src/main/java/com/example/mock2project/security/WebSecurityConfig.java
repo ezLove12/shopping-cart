@@ -1,14 +1,18 @@
 package com.example.mock2project.security;
 
 import com.example.mock2project.filter.CustomAuthenticationFilter;
+import com.example.mock2project.filter.CustomAuthorizationFilter;
 import com.example.mock2project.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
@@ -33,10 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .antMatchers("/signup","/token/refresh/**", "/confirm").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/signup","/token/refresh/**", "/confirm").permitAll();
+        http
+                .authorizeRequests()
+                .antMatchers("/user/profile/**").hasAuthority("ROLE_ACTIVE_USER");
         http
                 .addFilter(new CustomAuthenticationFilter(authenticationManager()));
+        http
+                .addFilterBefore(new CustomAuthorizationFilter() , UsernamePasswordAuthenticationFilter.class);
 
     }
 }

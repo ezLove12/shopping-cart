@@ -5,18 +5,19 @@ import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
 import com.example.mock2project.repository.UserRepository;
 import com.example.mock2project.security.PasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
+@Slf4j
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
@@ -26,19 +27,22 @@ public class UserService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        final User user = userRepository.findByEmail(email);
-
+        User user = userRepository.findByEmail(email);
         if(user==null){
-            throw new UsernameNotFoundException(email);
+            log.error("User not found");
+            throw new UsernameNotFoundException("User not found");
+        }else{
+            log.info("User found "+email);
         }
 
-        boolean enabled = !user.isStatus();
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            log.info(role.getName());
+        });
 
-        UserDetails userDetails  = org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities("USER").build();
-
-        return userDetails;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(), authorities);
     }
 
     public String signUpUser(User user){
@@ -56,7 +60,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("USER"));
+        roles.add(new Role(1L,"USER"));
         user.setRoles(roles);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
@@ -82,5 +86,14 @@ public class UserService implements UserDetailsService {
 
     public User getUser(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public void changePassword(String new_password, Long user_id, String old_password) throws Exception {
+        String encodedPassword = userRepository.getEncodedPassword(user_id);
+        if (passwordEncoder.bCryptPasswordEncoder().matches(old_password, encodedPassword)){
+            userRepository.changePassword(passwordEncoder.bCryptPasswordEncoder().encode(new_password), user_id);
+        }else{
+            throw new Exception("Password must matches old password");
+        }
     }
 }

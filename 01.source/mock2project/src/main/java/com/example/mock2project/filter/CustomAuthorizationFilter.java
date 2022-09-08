@@ -26,13 +26,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/login")){
-            filterChain.doFilter(request, response); //if request to path "/login" wont do filter, let request pass
+        if(request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh") || request.getServletPath().equals("/signup")){
+            filterChain.doFilter(request, response); //if request to path "..." wont do filter, let request pass
         }else{
             String authorizationHeader = request.getHeader(AUTHORIZATION);//get authorization from header
             if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
                 try {
-                    String access_token = authorizationHeader.substring("Bearer".length());
+                    String access_token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = Algorithm.HMAC256("viet".getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     //decoded token from header
@@ -45,13 +45,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     });
                     //do filter
                     UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(username, null);
+                            new UsernamePasswordAuthenticationToken(username, null,authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
                 }catch (Exception e){
                     log.error("Error logging in: {}", e.getMessage());
                     response.setHeader("error", e.getMessage());
-                    response.setStatus(403);
+                    response.setStatus(401);
                     Map<String, String> tokens = new HashMap<>();
                     tokens.put("error", e.getMessage());
                     response.setContentType(APPLICATION_JSON_VALUE);
