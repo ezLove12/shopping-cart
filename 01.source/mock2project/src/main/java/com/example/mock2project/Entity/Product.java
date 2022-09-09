@@ -20,20 +20,18 @@ public class Product {
 
     @NotBlank
     @Column(name = "product_name")
-    @Size(max = 20)
     private String name;
 
     @NotBlank
     @Column(name = "product_price")
     private String price;
 
-    @NotBlank
+
     @Column
     private String image_link;
 
     @NotBlank
     @Column
-    @Size(max = 50)
     private String description;
 
     @NotBlank

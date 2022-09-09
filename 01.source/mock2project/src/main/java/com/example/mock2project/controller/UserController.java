@@ -45,6 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/orders")
+    @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
     public ResponseEntity<List<Order>> getUserOrder(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response){
         Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
         if(userTokenId == id){
@@ -55,6 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/total")
+    @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
     public ResponseEntity<String> getPurchasepriceByUserId(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response){
         Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
         if(userTokenId == id){
