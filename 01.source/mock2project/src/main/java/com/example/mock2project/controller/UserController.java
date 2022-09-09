@@ -54,5 +54,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<String> getPurchasepriceByUserId(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response){
+        Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
+        if(userTokenId == id){
+            return new ResponseEntity<>(orderService.getPurchasePriceByUserId(id), HttpStatus.OK);
+        }else{
+            throw new AccessDeniedException("You don't have permission");
+        }
+    }
 }
 

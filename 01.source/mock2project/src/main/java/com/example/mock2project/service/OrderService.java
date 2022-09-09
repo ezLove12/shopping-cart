@@ -14,4 +14,8 @@ public class OrderService {
     public List<Order> getOrdersByUserId(Long id){
         return orderRepository.findByUserId(id);
     }
+
+    public String getPurchasePriceByUserId(Long id){
+        return orderRepository.getPurchasePriceByUserId(id);
+    }
 }
