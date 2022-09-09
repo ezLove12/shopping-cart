@@ -27,7 +27,7 @@ public class ProductService {
             products = pagePro.getContent();
 
             Map<String, Object> response = new HashMap<>();
-            response.put("products",products);
+            response.put("products",pagePro.getContent());
             response.put("curPage", pagePro.getNumber());
             response.put("totalPros", pagePro.getTotalElements());
             response.put("totalPages", pagePro.getTotalPages());
