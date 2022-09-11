@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -18,7 +17,8 @@ public class AdminController {
     UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<Map<String, Object>> findAll(@RequestParam int page, @RequestParam int size) throws Exception {
+    public ResponseEntity<Map<String, Object>> findAll(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "3") int size) throws Exception {
         return new ResponseEntity<>(userService.findAllUser(page, size), HttpStatus.OK);
     }
 

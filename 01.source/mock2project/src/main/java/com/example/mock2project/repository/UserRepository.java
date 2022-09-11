@@ -33,6 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("Select u.password from User u where u.id=?1")
     String getEncodedPassword(Long id);
 
+    @Query("Select u from User u")
     Page<User> findAll(Pageable pageable);
 
     Optional<User> findUserById(Long id);
