@@ -44,6 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/user/profile/**").hasAnyAuthority("ROLE_ACTIVE_USER",
                         "ROLE_SYSTEM_ADMIN", "ROLE_SALE_ADMIN");
         http
+                .authorizeRequests()
+                        .antMatchers("/admin/**").hasAnyAuthority("ROLE_SALE_AMIN", "ROLE_SYSTEM_ADMIN");
+        http
                 .addFilter(new CustomAuthenticationFilter(authenticationManager()));
         http
                 .addFilterBefore(new CustomAuthorizationFilter() , UsernamePasswordAuthenticationFilter.class);

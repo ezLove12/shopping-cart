@@ -47,7 +47,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "categories_id")
-    @JsonManagedReference
     private Categories categories;
 
     @OneToMany(mappedBy = "product")

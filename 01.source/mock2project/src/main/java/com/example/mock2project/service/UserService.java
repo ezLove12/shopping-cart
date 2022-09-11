@@ -3,19 +3,21 @@ package com.example.mock2project.service;
 import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
+import com.example.mock2project.repository.RoleRepository;
 import com.example.mock2project.repository.UserRepository;
+import com.example.mock2project.requestEntity.AddedRole;
 import com.example.mock2project.security.PasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,6 +30,9 @@ public class UserService implements UserDetailsService {
     TokenService tokenService;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    RoleRepository roleRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -63,7 +68,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L,"USER"));
+        roles.add(new Role(3L,"ROLE_USER"));
         user.setRoles(roles);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
@@ -101,5 +106,44 @@ public class UserService implements UserDetailsService {
         }else{
             throw new Exception("Password must matches old password");
         }
+    }
+
+    public Map<String, Object> findAllUser(int page, int size) throws Exception {
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<User> pageUsers = userRepository.findAll(paging);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("curPage", pageUsers.getTotalPages());
+            response.put("users", pageUsers.getContent());
+            response.put("totalPage", pageUsers.getTotalElements());
+            return response;
+        }catch (Exception e){
+            throw new Exception("Something went wrong");
+        }
+    }
+
+    public void addRoleToUser(Long id, AddedRole addedRole) throws Exception {
+        User u = userRepository.findUserById(id).orElseThrow(() -> new Exception("User not found"));
+
+        Set<String> listRole = addedRole.getRoles();
+        Set<Role> roles = u.getRoles();
+
+        listRole.forEach(role -> {
+            switch (role){
+                case "ROLE_SYSTEM_ADMIN" ->{
+                    Role roleSysAdmin = roleRepository.findByName("ROLE_SYSTEM_ADMIN");
+                    roles.add(roleSysAdmin);
+                }
+
+                case "ROLE_SALE_ADMIN" ->{
+                    Role roleSaleAdmin = roleRepository.findByName("ROLE_SALE_ADMIN");
+                    roles.add(roleSaleAdmin);
+                }
+            }
+        });
+
+        u.setRoles(roles);
+        userRepository.save(u);
     }
 }
