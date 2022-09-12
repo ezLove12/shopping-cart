@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(nativeQuery = true, value = "Select * from Order where user_id = ?1")
@@ -17,4 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Override
     Page<Order> findAll(Pageable pageable);
+
+    Optional<Order> findById(Long id);
 }
