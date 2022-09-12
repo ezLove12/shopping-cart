@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(3L,"ROLE_USER"));
+        roles.add(new Role(3L,"USER"));
         user.setRoles(roles);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();

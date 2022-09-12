@@ -61,9 +61,11 @@ public class User implements UserDetails {
     private UserDetail userDetail;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Rating> ratingList;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private Set<Order> orders = new HashSet<>();
 
     public User() {
@@ -96,7 +98,7 @@ public class User implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role: roles
         ) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return authorities;
     }
