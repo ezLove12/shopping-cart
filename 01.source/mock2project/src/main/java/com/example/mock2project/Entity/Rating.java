@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+
 public class Rating {
 
     @Id
@@ -15,7 +16,7 @@ public class Rating {
     private Long id;
 
     @Column
-    private int vote;
+    private Integer vote;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -24,6 +25,7 @@ public class Rating {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
+
 
     public Rating() {
 
