@@ -1,6 +1,8 @@
 package com.example.mock2project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -20,20 +23,18 @@ public class Product {
 
     @NotBlank
     @Column(name = "product_name")
-    @Size(max = 20)
     private String name;
 
     @NotBlank
     @Column(name = "product_price")
     private String price;
 
-    @NotBlank
+
     @Column
     private String image_link;
 
     @NotBlank
     @Column
-    @Size(max = 50)
     private String description;
 
     @NotBlank
@@ -46,6 +47,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "categories_id")
+    @JsonManagedReference
     private Categories categories;
 
     @OneToMany(mappedBy = "product")
@@ -56,4 +58,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<OrderDetails> orderDetails;
+
+
 }

@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -37,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .antMatchers("/signup","/token/refresh/**", "/confirm").permitAll();
+                .antMatchers("/signup","/token/refresh/**", "/confirm", "/product").permitAll();
         http
                 .authorizeRequests()
                 .antMatchers("/user/profile/**").hasAnyAuthority("ROLE_ACTIVE_USER",
