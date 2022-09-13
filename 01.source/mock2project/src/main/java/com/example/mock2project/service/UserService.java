@@ -3,6 +3,8 @@ package com.example.mock2project.service;
 import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
+import com.example.mock2project.dto.UserDTO;
+import com.example.mock2project.dto.UserDetailDTO;
 import com.example.mock2project.repository.RoleRepository;
 import com.example.mock2project.repository.UserRepository;
 import com.example.mock2project.requestEntity.AddedRole;
@@ -34,13 +36,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     RoleRepository roleRepository;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);
         if(user==null){
             log.error("User not found");
             throw new UsernameNotFoundException("User not found");
         }else{
-            log.info("User found "+email);
+            log.info("User found "+username);
         }
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -92,8 +94,8 @@ public class UserService implements UserDetailsService {
         return userRepository.updateRole(id);
     }
 
-    public User getUser(String email){
-        return userRepository.findByEmail(email);
+    public User getUser(String username){
+        return userRepository.findByEmail(username);
     }
 
     public void changePassword(String new_password, Long user_id, String old_password) throws Exception {
@@ -111,12 +113,15 @@ public class UserService implements UserDetailsService {
     public Map<String, Object> findAllUser(int page, int size) throws Exception {
         try {
             Pageable paging = PageRequest.of(page, size);
+            List<UserDTO> listUserDTO = new ArrayList<>();
             Page<User> pageUsers = userRepository.findAll(paging);
-
+            pageUsers.getContent().forEach(user -> {
+                listUserDTO.add(new UserDTO(user.getId(), user.getEmail(), user.getUsername(), user.isStatus(), user.getRoles()));
+            });
             Map<String, Object> response = new HashMap<>();
-            response.put("curPage", pageUsers.getTotalPages());
-            response.put("users", pageUsers.getContent());
-            response.put("totalPage", pageUsers.getTotalElements());
+            response.put("curPage", pageUsers.getNumber());
+            response.put("users", listUserDTO);
+            response.put("totalPage", pageUsers.getTotalPages());
             return response;
         }catch (Exception e){
             throw new Exception("Something went wrong");
@@ -146,4 +151,5 @@ public class UserService implements UserDetailsService {
         u.setRoles(roles);
         userRepository.save(u);
     }
+
 }

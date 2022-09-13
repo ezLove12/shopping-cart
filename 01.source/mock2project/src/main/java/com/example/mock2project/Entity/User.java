@@ -54,18 +54,18 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonBackReference
+
     public Set<Role> roles = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserDetail userDetail;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+
     private List<Rating> ratingList;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+
     private Set<Order> orders = new HashSet<>();
 
     public User() {

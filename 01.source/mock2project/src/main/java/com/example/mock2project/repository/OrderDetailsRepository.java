@@ -1,7 +1,6 @@
 package com.example.mock2project.repository;
 
 import com.example.mock2project.Entity.OrderDetails;
-import com.example.mock2project.dto.OrderDetailsDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

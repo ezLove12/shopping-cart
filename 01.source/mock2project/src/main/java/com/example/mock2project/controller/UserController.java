@@ -17,11 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/user/profile/")
+@RequestMapping("/user/profile/{id}")
 @Slf4j
 public class UserController {
     @Autowired
@@ -32,8 +33,10 @@ public class UserController {
     @Autowired
     OrderService orderService;
     @PostMapping("/changepassword")
-    public ResponseEntity changePassword(HttpServletRequest request, HttpServletResponse response, @RequestParam Long id) throws Exception {
-        Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
+    @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
+    public ResponseEntity changePassword(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) throws Exception {
+        String username = (String) request.getAttribute("username");
+        Long userTokenId = userService.getUser(username).getId();
         if(userTokenId == id){
             String new_password = request.getParameter("new_password");
             String ole_password = request.getParameter("old_password");
@@ -46,10 +49,14 @@ public class UserController {
 
     @GetMapping("/orders")
     @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
-    public ResponseEntity<List<Order>> getUserOrder(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response){
-        Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
+    public ResponseEntity<Map<String, Object>> getUserOrder(@PathVariable Long id,
+                                                            HttpServletRequest request, HttpServletResponse response,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "3") int size) throws Exception {
+        Long userTokenId = userService.getUser((String)request.getAttribute("username")).getId();
+        log.info(userTokenId.toString());
         if(userTokenId == id){
-            return new ResponseEntity<>(orderService.getOrdersByUserId(id), HttpStatus.OK);
+            return new ResponseEntity<>(orderService.getOrdersByUserId(id, page, size), HttpStatus.OK);
         }else{
             throw new AccessDeniedException("You don't have permission");
         }
@@ -57,8 +64,8 @@ public class UserController {
 
     @GetMapping("/total")
     @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
-    public ResponseEntity<String> getPurchasepriceByUserId(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response){
-        Long userTokenId = Long.valueOf(jwtService.getUserIdFromToken(request, response));
+    public ResponseEntity<String> getPurchasepriceByUserId(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response){
+        Long userTokenId = userService.getUser((String)request.getAttribute("username")).getId();
         if(userTokenId == id){
             return new ResponseEntity<>(orderService.getPurchasePriceByUserId(id), HttpStatus.OK);
         }else{

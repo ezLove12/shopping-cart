@@ -13,4 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(nativeQuery = true, value = "Select * from Product where product_name like %?1%")
     Page<Product> findProductByName(String name, Pageable pageable);
+
 }

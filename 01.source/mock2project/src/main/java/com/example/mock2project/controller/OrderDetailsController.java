@@ -1,7 +1,5 @@
 package com.example.mock2project.controller;
 
-import com.example.mock2project.Entity.OrderDetails;
-import com.example.mock2project.dto.OrderDetailsDTO;
 import com.example.mock2project.service.OrderDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 public class OrderDetailsController {
@@ -19,7 +17,7 @@ public class OrderDetailsController {
     OrderDetailsService service;
     @GetMapping("/orderdetails/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SALE_ADMIN', 'ROLE_SYSTEM_ADMIN')")
-    public ResponseEntity<List<OrderDetailsDTO>> getOrderDetailsByOrder(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Map<String, Object>> getOrderDetailsByOrder(@PathVariable Long id) throws Exception {
         return new ResponseEntity<>(service.findOrderDetailsByOrderId(id), HttpStatus.OK);
     }
 }
