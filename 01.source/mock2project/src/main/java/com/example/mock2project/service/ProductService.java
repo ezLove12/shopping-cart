@@ -21,16 +21,29 @@ public class ProductService {
     ProductRepository productRepository;
     public Map<String, Object> getAllProduct(int page, int size) throws Exception {
         try{
-            List<Product> products = new ArrayList<Product>();
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pagePro = productRepository.findAll(paging);
-            products = pagePro.getContent();
 
             Map<String, Object> response = new HashMap<>();
             response.put("products",pagePro.getContent());
             response.put("curPage", pagePro.getNumber());
             response.put("totalPros", pagePro.getTotalElements());
             response.put("totalPages", pagePro.getTotalPages());
+            return response;
+        }catch (Exception e){
+            throw new Exception("Something went wrong");
+        }
+    }
+
+    public Map<String, Object> findProductByName(int page, int size, String name) throws Exception {
+        try{
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pagePro = productRepository.findProductByName(name, paging);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", pagePro.getContent());
+            response.put("curPage", pagePro.getNumber());
+            response.put("totalPros", pagePro.getTotalElements());
             return response;
         }catch (Exception e){
             throw new Exception("Something went wrong");

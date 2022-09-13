@@ -25,4 +25,11 @@ public class ProductController {
                                                                 @RequestParam(defaultValue = "3") int size) throws Exception {
         return new ResponseEntity<>(productService.getAllProduct(page, size), HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> findProductbyName(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "3") int size,
+                                                                 @RequestParam String name ) throws Exception {
+        return new ResponseEntity<>(productService.findProductByName(page, size, name), HttpStatus.OK);
+    }
 }
