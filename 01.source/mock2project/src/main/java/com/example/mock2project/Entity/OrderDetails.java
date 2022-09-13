@@ -1,7 +1,10 @@
 package com.example.mock2project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
 
 import javax.persistence.*;
 
@@ -22,6 +25,7 @@ public class OrderDetails {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)

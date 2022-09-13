@@ -54,16 +54,18 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonBackReference
+
     public Set<Role> roles = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserDetail userDetail;
 
     @OneToMany(mappedBy = "user")
+
     private List<Rating> ratingList;
 
     @OneToMany(mappedBy = "user")
+
     private Set<Order> orders = new HashSet<>();
 
     public User() {
@@ -96,7 +98,7 @@ public class User implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role: roles
         ) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return authorities;
     }

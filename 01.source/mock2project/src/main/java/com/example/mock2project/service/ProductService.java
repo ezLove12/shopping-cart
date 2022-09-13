@@ -1,6 +1,8 @@
 package com.example.mock2project.service;
 
 import com.example.mock2project.Entity.Product;
+import com.example.mock2project.dto.ProductDTO;
+import com.example.mock2project.repository.CateRepository;
 import com.example.mock2project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,13 +21,23 @@ import java.util.Map;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    CateRepository cateRepository;
     public Map<String, Object> getAllProduct(int page, int size) throws Exception {
         try{
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pagePro = productRepository.findAll(paging);
-
+            List<ProductDTO> productList = new ArrayList<>();
+            pagePro.getContent().forEach(product -> {
+                productList.add(
+                        new ProductDTO(product.getId(), product.getDescription(), product.getImage_link(),
+                                product.getName(), product.getPrice(), product.getQuantity(), product.getStatus(),
+                                cateRepository.findById(product.getCategories().getId()).get().getName())
+                );
+            });
             Map<String, Object> response = new HashMap<>();
-            response.put("products",pagePro.getContent());
+            response.put("products",productList);
             response.put("curPage", pagePro.getNumber());
             response.put("totalPros", pagePro.getTotalElements());
             response.put("totalPages", pagePro.getTotalPages());
