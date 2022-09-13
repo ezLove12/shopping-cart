@@ -2,7 +2,6 @@ package com.example.mock2project.controller;
 
 import com.example.mock2project.service.JWTService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

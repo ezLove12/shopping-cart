@@ -4,7 +4,6 @@ import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
 import com.example.mock2project.dto.UserDTO;
-import com.example.mock2project.dto.UserDetailDTO;
 import com.example.mock2project.repository.RoleRepository;
 import com.example.mock2project.repository.UserRepository;
 import com.example.mock2project.requestEntity.AddedRole;

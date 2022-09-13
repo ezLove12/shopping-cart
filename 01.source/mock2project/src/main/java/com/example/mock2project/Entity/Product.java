@@ -1,14 +1,11 @@
 package com.example.mock2project.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import java.util.List;
 
@@ -26,7 +23,6 @@ public class Product {
     @Column(name = "product_name")
     private String name;
 
-    @NotBlank
     @Column(name = "product_price")
     private String price;
 
