@@ -39,7 +39,7 @@ public class RegistrationService {
     public String confirmToken(String token){
         Optional<SignInToken> confirmToken = tokenService.getToken(token);
 
-        if(confirmToken.isEmpty()){
+        if(!confirmToken.isPresent()){
             throw new IllegalStateException("Token not found");
         }
 

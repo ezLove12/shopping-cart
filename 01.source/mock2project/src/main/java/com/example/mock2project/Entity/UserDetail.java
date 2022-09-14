@@ -1,5 +1,6 @@
 package com.example.mock2project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,10 +31,11 @@ public class UserDetail {
     private String address;
 
     @Column(name = "gender")
-    private Integer gender;
+    private String gender;
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
 }
