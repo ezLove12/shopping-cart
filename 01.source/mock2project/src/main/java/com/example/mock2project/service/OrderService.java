@@ -66,4 +66,10 @@ public class OrderService {
         o.setStatus(status);
         orderRepository.save(o);
     }
+
+    public OrderDTO findOrderById(long order_id) throws Exception {
+        Order order = orderRepository.findById(order_id).orElseThrow(()-> new Exception("Not found Order with Id ="+ order_id));
+        OrderDTO orderDTO = new OrderDTO(order.getId(), order.getAddress(), order.getPhone(), order.getTotalPrice(), order.getUser().getId());
+        return orderDTO;
+    }
 }

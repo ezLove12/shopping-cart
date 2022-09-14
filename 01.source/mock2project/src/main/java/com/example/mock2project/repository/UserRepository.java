@@ -37,4 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAll(Pageable pageable);
 
     Optional<User> findUserById(Long id);
+
+    @Query("select u from User u where concat(u.email,u.username, u.userDetail.address, u.userDetail.date, u.userDetail.fullname, u.userDetail.gender) like ?1")
+    Page<User> findUserByField(String search, Pageable pageable);
 }
