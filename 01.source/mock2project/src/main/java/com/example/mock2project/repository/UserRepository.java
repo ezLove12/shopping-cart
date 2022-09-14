@@ -1,6 +1,8 @@
 package com.example.mock2project.repository;
 
 import com.example.mock2project.Entity.User;
+import com.example.mock2project.dto.UserDetailDTO;
+import com.example.mock2project.dto.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,4 +39,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAll(Pageable pageable);
 
     Optional<User> findUserById(Long id);
+
+    @Query("select new com.example.mock2project.dto.UserInfo(u.email, u.username, ud.address, ud.date," +
+            "ud.fullname, ud.gender)"
+            + "from User u inner join UserDetail ud on ud.id = ?1")
+    UserInfo getInfoUser(Long id);
+
 }

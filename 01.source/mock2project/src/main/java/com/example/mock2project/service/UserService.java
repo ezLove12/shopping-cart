@@ -3,9 +3,12 @@ package com.example.mock2project.service;
 import com.example.mock2project.Entity.Role;
 import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
+import com.example.mock2project.Entity.UserDetail;
 import com.example.mock2project.dto.UserDTO;
 import com.example.mock2project.dto.UserDetailDTO;
+import com.example.mock2project.dto.UserInfo;
 import com.example.mock2project.repository.RoleRepository;
+import com.example.mock2project.repository.UserDetailRepository;
 import com.example.mock2project.repository.UserRepository;
 import com.example.mock2project.requestEntity.AddedRole;
 import com.example.mock2project.security.PasswordEncoder;
@@ -32,6 +35,9 @@ public class UserService implements UserDetailsService {
     TokenService tokenService;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserDetailRepository userDetailRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -136,12 +142,12 @@ public class UserService implements UserDetailsService {
 
         listRole.forEach(role -> {
             switch (role){
-                case "ROLE_SYSTEM_ADMIN" ->{
+                case "ROLE_SYSTEM_ADMIN": {
                     Role roleSysAdmin = roleRepository.findByName("ROLE_SYSTEM_ADMIN");
                     roles.add(roleSysAdmin);
                 }
 
-                case "ROLE_SALE_ADMIN" ->{
+                case "ROLE_SALE_ADMIN": {
                     Role roleSaleAdmin = roleRepository.findByName("ROLE_SALE_ADMIN");
                     roles.add(roleSaleAdmin);
                 }
@@ -150,6 +156,27 @@ public class UserService implements UserDetailsService {
 
         u.setRoles(roles);
         userRepository.save(u);
+    }
+
+    public UserDetail editInfoUser(UserDetail userDetail, Long id) {
+
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found user"));
+
+        UserDetail newUserDetail = new UserDetail();
+        newUserDetail.setId(id);
+        newUserDetail.setAddress(userDetail.getAddress());
+        newUserDetail.setDate(userDetail.getDate());
+        newUserDetail.setFullname(userDetail.getFullname());
+        newUserDetail.setGender(userDetail.getGender());
+        newUserDetail.setUser(existingUser);
+        userDetailRepository.save(userDetail);
+
+        return newUserDetail;
+    }
+
+    public UserInfo viewUserInfo(Long id) {
+        User existUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found user"));
+        return userRepository.getInfoUser(id);
     }
 
 }

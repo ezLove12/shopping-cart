@@ -14,4 +14,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(nativeQuery = true, value = "Select * from Product where product_name like %?1%")
     Page<Product> findProductByName(String name, Pageable pageable);
 
+    @Query(nativeQuery = true, value = "Select quantity from Product where id = ?1")
+    int getQuantityProduct(Long id);
+
+    @Query(nativeQuery = true, value = "UPDATE Product SET quantity = ?1 WHERE id = ?2")
+    void remainQuantityProduct(Integer quantity, Long id);
 }

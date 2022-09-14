@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/signup","/token/refresh/**", "/confirm", "/product").permitAll();
         http
                 .authorizeRequests()
-                .antMatchers("/user/profile/**").hasAnyAuthority("ROLE_ACTIVE_USER",
+                .antMatchers("/user/profile/**", "/user/cart/**").hasAnyAuthority("ROLE_ACTIVE_USER",
                         "ROLE_SYSTEM_ADMIN", "ROLE_SALE_ADMIN");
         http
                 .authorizeRequests()
