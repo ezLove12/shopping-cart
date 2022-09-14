@@ -1,5 +1,6 @@
 package com.example.mock2project.Entity;
 
+import com.example.mock2project.service.RatingService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "Orders")
+@EntityListeners(RatingService.class)
 public class Order {
 
     @Id
