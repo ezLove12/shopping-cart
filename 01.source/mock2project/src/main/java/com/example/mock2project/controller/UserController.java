@@ -1,5 +1,11 @@
 package com.example.mock2project.controller;
 
+
+
+import com.example.mock2project.Entity.UserDetail;
+
+import com.example.mock2project.dto.UserInfo;
+
 import com.example.mock2project.service.JWTService;
 import com.example.mock2project.service.OrderService;
 import com.example.mock2project.service.UserService;
@@ -66,6 +72,20 @@ public class UserController {
         }else{
             throw new AccessDeniedException("You don't have permission");
         }
+    }
+
+    @PutMapping("/editInfo")
+    @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
+    public ResponseEntity<UserDetail> editInfoUser(@PathVariable("id")  Long id,
+                                                   @RequestBody UserDetail userDetail) {
+
+        return new ResponseEntity<UserDetail>(userService.editInfoUser(userDetail, id), HttpStatus.OK);
+    }
+
+    @GetMapping("/view")
+    @PreAuthorize("hasAuthority('ROLE_ACTIVE_USER')")
+    public ResponseEntity<UserInfo> getUserInfo(@PathVariable("id") Long user_id) {
+        return new ResponseEntity<UserInfo>(userService.viewUserInfo(user_id), HttpStatus.OK);
     }
 }
 
