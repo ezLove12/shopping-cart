@@ -1,13 +1,14 @@
 package com.example.mock2project.controller;
 
-import com.example.mock2project.Entity.Order;
+
+
 import com.example.mock2project.Entity.UserDetail;
-import com.example.mock2project.dto.UserDetailDTO;
+
 import com.example.mock2project.dto.UserInfo;
+
 import com.example.mock2project.service.JWTService;
 import com.example.mock2project.service.OrderService;
 import com.example.mock2project.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.List;
 import java.util.Map;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/user/profile/{id}")

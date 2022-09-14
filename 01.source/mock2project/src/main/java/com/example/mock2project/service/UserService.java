@@ -5,8 +5,9 @@ import com.example.mock2project.Entity.SignInToken;
 import com.example.mock2project.Entity.User;
 import com.example.mock2project.Entity.UserDetail;
 import com.example.mock2project.dto.UserDTO;
-import com.example.mock2project.dto.UserDetailDTO;
+
 import com.example.mock2project.dto.UserInfo;
+
 import com.example.mock2project.repository.RoleRepository;
 import com.example.mock2project.repository.UserDetailRepository;
 import com.example.mock2project.repository.UserRepository;
@@ -130,7 +131,7 @@ public class UserService implements UserDetailsService {
             response.put("totalPage", pageUsers.getTotalPages());
             return response;
         }catch (Exception e){
-            throw new Exception("Something went wrong");
+            throw new Exception();
         }
     }
 
@@ -156,6 +157,27 @@ public class UserService implements UserDetailsService {
 
         u.setRoles(roles);
         userRepository.save(u);
+    }
+
+
+    public Map<String, Object> searchUser(String search,int page,int size) throws Exception {
+        try{
+            Pageable paging = PageRequest.of(page, size);
+            List<UserDTO> userDTOList = new ArrayList<>();
+            Page<User> pageUsers = userRepository.findUserByField("%"+search+"%", paging);
+            pageUsers.getContent().forEach(user -> {
+                userDTOList.add(new UserDTO(user.getId(), user.getEmail(), user.getUsername(), user.isStatus(), user.getRoles()));
+            });
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("curPage", pageUsers.getNumber());
+            response.put("listUsers", userDTOList);
+            response.put("totalUser", pageUsers.getTotalElements());
+            response.put("totalPage", pageUsers.getTotalPages());
+            return response;
+        }catch (Exception ex){
+            throw new Exception();
+        }
     }
 
     public UserDetail editInfoUser(UserDetail userDetail, Long id) {

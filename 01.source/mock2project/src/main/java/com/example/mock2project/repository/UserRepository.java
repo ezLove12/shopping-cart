@@ -1,7 +1,7 @@
 package com.example.mock2project.repository;
 
 import com.example.mock2project.Entity.User;
-import com.example.mock2project.dto.UserDetailDTO;
+
 import com.example.mock2project.dto.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,9 +40,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserById(Long id);
 
+
+    @Query("select u from User u where concat(u.email,u.username, u.userDetail.address, u.userDetail.date, u.userDetail.fullname, u.userDetail.gender) like ?1")
+    Page<User> findUserByField(String search, Pageable pageable);
+
     @Query("select new com.example.mock2project.dto.UserInfo(u.email, u.username, ud.address, ud.date," +
             "ud.fullname, ud.gender)"
             + "from User u inner join UserDetail ud on ud.id = ?1")
     UserInfo getInfoUser(Long id);
+
 
 }
