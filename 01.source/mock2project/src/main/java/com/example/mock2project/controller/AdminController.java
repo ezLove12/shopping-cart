@@ -34,11 +34,11 @@ public class AdminController {
         return new ResponseEntity<>("Add Role Successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/orders")
-    public ResponseEntity<Map<String, Object>> findAllOrder(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "3") int size) throws Exception {
-        return new ResponseEntity<>(orderService.findAllOrder(page, size), HttpStatus.OK);
-    }
+//    @GetMapping("/orders")
+//    public ResponseEntity<Map<String, Object>> findAllOrder(@RequestParam(defaultValue = "0") int page,
+//                                                            @RequestParam(defaultValue = "3") int size) throws Exception {
+//        return new ResponseEntity<>(orderService.findAllOrder(page, size), HttpStatus.OK);
+//    }
 
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> searchUser(@RequestParam(defaultValue = "0") int page,
