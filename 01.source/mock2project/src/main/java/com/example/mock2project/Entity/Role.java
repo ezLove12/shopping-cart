@@ -1,5 +1,6 @@
 package com.example.mock2project.Entity;
 
+import com.example.mock2project.service.RoleService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @AllArgsConstructor
+@EntityListeners(RoleService.class)
 public class Role {
 
     @Id
