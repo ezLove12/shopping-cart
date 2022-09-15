@@ -16,4 +16,13 @@ public class ProductDTO {
     private Integer quantity;
     private int status;
     private String cate_name;
+
+    public ProductDTO(String des, String pname, String pprice, Integer quantity, int status, String cate_name) {
+        this.des = des;
+        this.pname = pname;
+        this.pprice = pprice;
+        this.quantity = quantity;
+        this.status = status;
+        this.cate_name = cate_name;
+    }
 }

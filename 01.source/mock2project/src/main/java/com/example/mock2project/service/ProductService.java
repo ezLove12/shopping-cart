@@ -1,5 +1,6 @@
 package com.example.mock2project.service;
 
+import com.example.mock2project.Entity.Categories;
 import com.example.mock2project.Entity.Product;
 import com.example.mock2project.dto.ProductDTO;
 import com.example.mock2project.repository.CateRepository;
@@ -92,6 +93,23 @@ public class ProductService {
             return response;
         }catch (Exception e){
             throw new Exception("Something went wrong");
+        }
+    }
+
+    public Product saveProduct(ProductDTO p) throws Exception {
+        try{
+            Categories categories = cateRepository.findByName(p.getCate_name()).orElseThrow(()->new Exception("Not found categories with name "+p.getCate_name()));
+            Product pro = new Product();
+            pro.setName(p.getPname());
+            pro.setImage_link(p.getImage_link());
+            pro.setCategories(categories);
+            pro.setPrice(p.getPprice());
+            pro.setQuantity(p.getQuantity());
+            pro.setPrice(p.getPprice());
+            pro.setStatus(p.getStatus());
+            return productRepository.save(pro);
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
         }
     }
 }
