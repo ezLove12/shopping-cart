@@ -19,7 +19,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+
     @Column(name = "product_name")
     private String name;
 
@@ -30,15 +30,15 @@ public class Product {
     @Column
     private String image_link;
 
-    @NotBlank
+
     @Column
     private String description;
 
-    @NotBlank
+
     @Column
     private Integer quantity;
 
-    @NotBlank
+
     @Column
     private int status;
 
