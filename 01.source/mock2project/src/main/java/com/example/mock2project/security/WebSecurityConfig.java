@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http
                 .authorizeRequests()
                 .antMatchers("/signup","/token/refresh/**", "/confirm", "/product").permitAll();
