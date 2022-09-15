@@ -1,6 +1,7 @@
 package com.example.mock2project.service;
 
 import com.example.mock2project.Entity.Categories;
+import com.example.mock2project.dto.CateDTO;
 import com.example.mock2project.repository.CateRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,13 @@ public class CateService {
     public Long getCateIdByName(String name){
         Categories c = cateRepository.findByName(name).orElseThrow(()->new ObjectNotFoundException(name, "Not found"));
         return c.getId();
+    }
+
+    public Categories saveCate(CateDTO cateDTO) throws Exception {
+
+        Categories c = new Categories();
+        c.setName(cateDTO.getCate_name());
+        c.setImage_category(cateDTO.getImage_link());
+        return cateRepository.save(c);
     }
 }

@@ -27,7 +27,7 @@ public class FileService {
         Credentials credentials = GoogleCredentials.fromStream(serviceAccount.getInputStream());
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-        String download_url = "https://firebasestorage.googleapis.com/v0/b/fileupload-83a52.appspot.com/o/%s?alt=media";
+        String download_url = "https://firebasestorage.googleapis.com/v0/b/proshop-49f3f.appspot.com/o/%s?alt=media";
         return String.format(download_url, URLEncoder.encode(filename, StandardCharsets.UTF_8));
     }
 
@@ -47,13 +47,13 @@ public class FileService {
     public String upload(MultipartFile multipartFile) throws Exception {
 
         try {
-            String fileName = multipartFile.getOriginalFilename();                        // to get original file name
-            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));  // to generated random string values for file name.
+            String fileName = multipartFile.getOriginalFilename();
+            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));
 
-            File file = this.convertToFile(multipartFile, fileName);                      // to convert multipartFile to File
-            String TEMP_URL = this.uploadFile(file, fileName);                                   // to get uploaded file link
-            file.delete();                                                                // to delete the copy of uploaded file stored in the project folder
-            return TEMP_URL;                     // Your customized response
+            File file = this.convertToFile(multipartFile, fileName);
+            String TEMP_URL = this.uploadFile(file, fileName);
+            file.delete();
+            return TEMP_URL;
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception();
