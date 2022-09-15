@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,12 @@ public class CateController {
         cateDTO.setImage_link(link);
         cateService.saveCate(cateDTO);
         return new ResponseEntity<>("Add Category "+name+" success", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/categories/{id}/update")
+    public ResponseEntity<String> updateName(@RequestParam("name") String name,
+                                             @PathVariable Long id) throws Exception {
+        cateService.updateCateName(id, name);
+        return new ResponseEntity<>("Change name for category "+id, HttpStatus.OK);
     }
 }
