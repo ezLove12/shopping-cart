@@ -8,6 +8,7 @@ import com.example.mock2project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,7 +48,8 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Product> saveProduct(@RequestParam("file")MultipartFile multipartFile,
+    @PreAuthorize("hasAuthority('ROLE_SALE_ADMIN')")
+    public ResponseEntity<String> saveProduct(@RequestParam("file")MultipartFile multipartFile,
                                                @RequestParam("name") String name,
                                                @RequestParam("quantity") Integer quantity,
                                                @RequestParam("des") String des,
@@ -63,6 +65,6 @@ public class ProductController {
         String file_url = fileService.upload(multipartFile);
         productDTO.setImage_link(file_url);
         Product pro = productService.saveProduct(productDTO);
-        return new ResponseEntity<>(pro, HttpStatus.CREATED);
+        return new ResponseEntity<>("Save Product "+ name +" success", HttpStatus.CREATED);
     }
 }

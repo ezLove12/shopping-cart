@@ -107,6 +107,7 @@ public class ProductService {
             pro.setQuantity(p.getQuantity());
             pro.setPrice(p.getPprice());
             pro.setStatus(p.getStatus());
+            pro.setDescription(p.getDes());
             return productRepository.save(pro);
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
