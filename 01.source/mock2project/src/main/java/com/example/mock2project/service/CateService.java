@@ -24,4 +24,10 @@ public class CateService {
         c.setImage_category(cateDTO.getImage_link());
         return cateRepository.save(c);
     }
+
+    public void updateCateName(Long id, String newname) throws Exception {
+        Categories cate = cateRepository.findById(id).orElseThrow(()-> new Exception("Not found category "));
+        cate.setName(newname);
+        cateRepository.save(cate);
+    }
 }
