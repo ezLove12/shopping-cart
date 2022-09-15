@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -64,7 +65,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access token", access_token);
         tokens.put("refresh token", refresh_token);
+        tokens.put("email", user.getUsername());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(401);
+        Map<String, String> error = new HashMap<>();
+        error.put("statusCode", HttpStatus.UNAUTHORIZED.toString());
+        error.put("message", "Wrong username or password");
+        new ObjectMapper().writeValue(response.getOutputStream(), error);
     }
 }

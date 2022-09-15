@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(username);
         if(user==null){
             log.error("User not found");
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("Username not found");
         }else{
             log.info("User found "+username);
         }
